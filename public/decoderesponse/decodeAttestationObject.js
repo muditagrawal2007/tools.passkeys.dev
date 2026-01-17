@@ -1,4 +1,5 @@
 import { decodeCBOR } from 'tiny-cbor';
+import { decodeBase64Url } from 'tiny-encodings';
 
 /**
  * Convert response.attestationObject to a dev-friendly format
@@ -11,7 +12,13 @@ import { decodeCBOR } from 'tiny-cbor';
  * }}
  */
 export function decodeAttestationObject(base64urlString) {
-  return decodeCBOR(base64urlString, 'base64');
+  const attestationObjectBytes = decodeBase64Url(base64urlString);
+  const decoded = decodeCBOR(attestationObjectBytes);
+  return {
+    fmt: decoded.get('fmt'),
+    attStmt: decoded.get('attStmt'),
+    authData: decoded.get('authData'),
+  };
 }
 
 /**

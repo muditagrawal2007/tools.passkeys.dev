@@ -1,5 +1,6 @@
-import { AsnParser } from "@peculiar/asn1-schema";
-import { Certificate } from "@peculiar/asn1-x509";
+// import { AsnParser } from "@peculiar/asn1-schema";
+// import { Certificate } from "@peculiar/asn1-x509";
+import { encodeBase64Url } from 'tiny-encodings';
 
 /**
  * Parse X.509 certificates into something legible
@@ -7,6 +8,7 @@ import { Certificate } from "@peculiar/asn1-x509";
  * // Certificate[]
  * @returns {any[]}
  */
-export default function x5cToStrings(x5c) {
-  return x5c.map((cert) => AsnParser.parse(Buffer.from(cert), Certificate));
+export function x5cToStrings(x5c) {
+  // return x5c.map((cert) => AsnParser.parse(Buffer.from(cert), Certificate));
+  return x5c.map((cert) => encodeBase64Url(cert));
 }

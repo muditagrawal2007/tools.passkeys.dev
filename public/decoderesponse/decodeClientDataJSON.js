@@ -17,6 +17,7 @@ import { decodeBase64Url } from 'tiny-encodings';
  * }}
  */
 export function decodeClientDataJSON(base64urlString) {
-  return JSON.parse(decodeBase64Url(base64urlString));
+  const jsonBytes = decodeBase64Url(base64urlString);
+  const jsonString = new TextDecoder().decode(jsonBytes);
+  return JSON.parse(jsonString);
 }
-

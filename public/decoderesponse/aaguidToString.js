@@ -1,3 +1,5 @@
+import { encodeHex } from 'tiny-encodings';
+
 /**
  * Convert the aaguid buffer in authData into a UUID string
  *
@@ -6,7 +8,7 @@
  */
 export function aaguidToString(aaguid) {
   // Raw Hex: adce000235bcc60a648b0b25f1f05503
-  const hex = aaguid.toString('hex');
+  const hex = encodeHex(aaguid);
 
   const segments = [
     hex.slice(0, 8), // 8

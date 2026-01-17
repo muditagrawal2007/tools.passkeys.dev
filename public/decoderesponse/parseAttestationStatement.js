@@ -1,7 +1,7 @@
 import { decodeBase64Url, encodeBase64Url } from 'tiny-encodings';
 
-import coseAlgToString from './coseAlgToString';
-import x5cToStrings from './x5cToStrings';
+import { coseAlgToString } from './coseAlgToString.js';
+import { x5cToStrings } from './x5cToStrings.js';
 
 /**
  * Break down attestation statement properties
@@ -21,7 +21,7 @@ import x5cToStrings from './x5cToStrings';
  * }} statement Output from `decodeAttestationObject()`
  * @returns {ParsedAttestationStatement} A human-readable representation of values within the parsed attestation statement
  */
-export default function parseAttestationStatement(statement) {
+export function parseAttestationStatement(statement) {
   const toReturn = {};
 
   // Packed, TPM, AndroidKey

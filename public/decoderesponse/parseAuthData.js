@@ -1,9 +1,9 @@
 import { decodeCBOR } from 'tiny-cbor';
-import { encodeBase64Url } from 'tiny-encodings';
+import { encodeBase64Url, encodeHex } from 'tiny-encodings';
 
-import aaguidToString from './aaguidToString';
-import coseKeyTypeToString from './coseKeyTypeToString';
-import coseAlgToString from './coseAlgToString';
+import { aaguidToString } from './aaguidToString.js';
+import { coseKeyTypeToString } from './coseKeyTypeToString.js';
+import { coseAlgToString } from './coseAlgToString.js';
 
 const COSEKEYS = {
   kty: 1,
@@ -23,7 +23,7 @@ const COSEKEYS = {
  * @param {Uint8Array} authData
  * @returns {AuthenticatorData} Parsed AuthenticatorData
  */
-export default function parseAuthData(authData) {
+export function parseAuthData(authData) {
   let buffer = Uint8Array.from(authData);
 
   const rpIdHash = buffer.slice(0, 32);
@@ -47,7 +47,7 @@ export default function parseAuthData(authData) {
   const counterBuf = buffer.slice(0, 4);
   buffer = buffer.slice(4);
 
-  const counter = counterBuf.readUInt32BE(0);
+  const counter = new DataView(counterBuf.buffer, counterBuf.byteOffset).getUint32(0, false);
 
   /** @type {Uint8Array?} */
   let aaguid;
@@ -65,7 +65,7 @@ export default function parseAuthData(authData) {
     const credIDLenBuf = buffer.slice(0, 2);
     buffer = buffer.slice(2);
 
-    const credIDLen = credIDLenBuf.readUInt16BE(0);
+    const credIDLen = new DataView(credIDLenBuf.buffer, credIDLenBuf.byteOffset).getUint16(0, false);
     let credentialIDBuffer = buffer.slice(0, credIDLen);
     buffer = buffer.slice(credIDLen);
 
@@ -77,32 +77,30 @@ export default function parseAuthData(authData) {
 
     // TODO: Handle this differently if this is an RSA key
     parsedCredentialPublicKey = {
-      keyType: pubKey?.[1],
+      keyType: pubKey.get(COSEKEYS.kty),
     };
 
     if (pubKey) {
-      const kty = pubKey[COSEKEYS.kty];
+      const kty = pubKey.get(COSEKEYS.kty);
 
       parsedCredentialPublicKey.keyType = coseKeyTypeToString(kty);
-      parsedCredentialPublicKey.algorithm = coseAlgToString(pubKey[COSEKEYS.alg]);
+      parsedCredentialPublicKey.algorithm = coseAlgToString(pubKey.get(COSEKEYS.alg));
 
       if (kty === 3) {
         // RSA
-        parsedCredentialPublicKey.modulus = encodeBase64Url(Uint8Array.from(pubKey[COSEKEYS.mod]));
-        // TODO: Figure out a non-Node way to do this
-        parsedCredentialPublicKey.exponent = parseInt(Uint8Array.from(pubKey[COSEKEYS.exp]).toString('hex'), 16);
+        parsedCredentialPublicKey.modulus = encodeBase64Url(Uint8Array.from(pubKey.get(COSEKEYS.mod)));
+        parsedCredentialPublicKey.exponent = parseInt(encodeHex(Uint8Array.from(pubKey.get(COSEKEYS.exp))), 16);
       } else if (kty === 7) {
         // ML-DSA
-        parsedCredentialPublicKey.pub = encodeBase64Url(Uint8Array.from(pubKey[COSEKEYS.pub]));
+        parsedCredentialPublicKey.pub = encodeBase64Url(Uint8Array.from(pubKey.get(COSEKEYS.pub)));
       } else {
         // Everything else, including EC2 and OKP
-        parsedCredentialPublicKey.curve = pubKey[COSEKEYS.crv];
-
-        parsedCredentialPublicKey.x = encodeBase64Url(Uint8Array.from(pubKey[COSEKEYS.x]));
+        parsedCredentialPublicKey.curve = pubKey.get(COSEKEYS.crv);
+        parsedCredentialPublicKey.x = encodeBase64Url(Uint8Array.from(pubKey.get(COSEKEYS.x)));
 
         // y isn't present in OKP certs
-        if (pubKey[COSEKEYS.y]) {
-          parsedCredentialPublicKey.y = encodeBase64Url(Uint8Array.from(pubKey[COSEKEYS.y]));
+        if (pubKey.get(COSEKEYS.y)) {
+          parsedCredentialPublicKey.y = encodeBase64Url(Uint8Array.from(pubKey.get(COSEKEYS.y)));
         }
       }
     }

@@ -7,7 +7,7 @@ import { encodeBase64Url } from 'tiny-encodings';
  * @param {string} newValue
  * @returns {void}
  */
-export default function updateQueryParam(param, newValue) {
+export function updateQueryParam(param, newValue) {
   const searchParams = new URLSearchParams(window.location.search);
 
   if (newValue.length < 1) {
