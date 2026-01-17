@@ -1,5 +1,6 @@
 import { log } from '../assets/js/common.js';
 import { decodeRegistrationCredential } from './decodeRegistrationCredential.js';
+import { decodeAuthenticationCredential } from './decodeAuthenticationCredential.js';
 import "json-viewer";
 
 // Create an instance of our fancy text editor
@@ -74,9 +75,11 @@ function resetUI() {
  * @param {object} decodedResponse
  */
 function showDecodedOutput(responseType, decodedResponse) {
+  // Set the output title
   parsedTitleElem.innerText = `WebAuthn ${responseType} Response (Parsed)`;
-  // TODO: Render this
-  console.log({ decodedResponse });
+
+  // Render the decoded response
+  parsedJSONElem.data = decodedResponse;
 
   // Show the output
   parsedOutputElem.classList.remove('d-none');
@@ -109,12 +112,8 @@ function decodeResponse(rawCredential) {
     }
   } else if (isAuthenticationCredential(credential)) {
     try {
-      const decoded =
-      // TODO: Display the output
-      setDecoded({
-        type: 'Authentication',
-        value: decodeAuthenticationCredential(credential),
-      });
+      const decoded = decodeAuthenticationCredential(credential);
+      showDecodedOutput("Authentication", decoded);
     } catch (err) {
       throw new Error(`There was an error when parsing this authentication credential (see console for more info): ${err}`);
     }
