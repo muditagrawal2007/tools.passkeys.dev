@@ -43,32 +43,6 @@ flask.onUpdate((code) => {
   }
 });
 
-// DEBUG - Registration
-setTimeout(() => {
-  flask.updateCode(`{
-  "id": "0PjLmk8beadc6I1u5bMrZv6rg0JlTfkp",
-  "rawId": "0PjLmk8beadc6I1u5bMrZv6rg0JlTfkp",
-  "response": {
-    "attestationObject": "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVicdKbqkhPJnC90siSSsyDPQCYqlMGpUKA5fyklC2CEHvBdAAAAALraVWanqkAfvZZFYZpVEg0AGND4y5pPG3mnXOiNbuWzK2b-q4NCZU35KaUBAgMmIAEhWCBqFugix1y1gg-sUzr8JhsvI-b8Dc5lAUSqlLL4vKTcziJYIE-InBmgUVIpTbCN2D_h5UYzWhA7wJlP0a5CAYdSkb4Q",
-    "clientDataJSON": "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiMVVlLWZCZXkyR3p3QXQteU9LRWROUUloYXV1Vmw1QkRFcy1lLWZqUEdfTlBmU2ZIT0YwQUJ0LWQ1SG1UaWJhSV82SkZ1cHQ1bmp3dmNxWTVNSmpNdGciLCJvcmlnaW4iOiJodHRwczovL3dlYmF1dGhuLmlvIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfQ",
-    "transports": [
-      "internal",
-      "hybrid"
-    ],
-    "publicKeyAlgorithm": -7,
-    "publicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEahboIsdctYIPrFM6_CYbLyPm_A3OZQFEqpSy-Lyk3M5PiJwZoFFSKU2wjdg_4eVGM1oQO8CZT9GuQgGHUpG-EA",
-    "authenticatorData": "dKbqkhPJnC90siSSsyDPQCYqlMGpUKA5fyklC2CEHvBdAAAAALraVWanqkAfvZZFYZpVEg0AGND4y5pPG3mnXOiNbuWzK2b-q4NCZU35KaUBAgMmIAEhWCBqFugix1y1gg-sUzr8JhsvI-b8Dc5lAUSqlLL4vKTcziJYIE-InBmgUVIpTbCN2D_h5UYzWhA7wJlP0a5CAYdSkb4Q"
-  },
-  "type": "public-key",
-  "clientExtensionResults": {
-    "credProps": {
-      "rk": true
-    }
-  },
-  "authenticatorAttachment": "platform"
-}`);
-}, 10);
-
 function resetUI() {
   // Clear the debug output
   logOutputElem.classList.add('d-none');
